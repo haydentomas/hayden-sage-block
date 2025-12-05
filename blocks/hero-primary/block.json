@@ -1,0 +1,69 @@
+{
+  "apiVersion": 2,
+  "name": "smart/hero-primary",
+  "title": "Hero – Primary",
+  "category": "smart-blocks",
+  "icon": "slides",
+  "description": "A primary hero section with heading, text and call to action button.",
+  "keywords": [
+    "hero",
+    "banner",
+    "intro"
+  ],
+  "supports": {
+    "align": ["wide", "full"],
+    "color": {
+      "background": true,
+      "text": true,
+      "link": false
+    },
+    "spacing": {
+      "padding": true,
+      "margin": ["top", "bottom"]
+    }
+  },
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Featured service"
+    },
+    "heading": {
+      "type": "string",
+      "default": "We build fast, modern WordPress sites."
+    },
+    "text": {
+      "type": "string",
+      "default": "Custom builds, ongoing care plans and performance optimisation for businesses that take their website seriously."
+    },
+    "headingColor": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonLabel": {
+      "type": "string",
+      "default": "Start a project"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "/start-a-project"
+    },
+    "buttonBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonTextColor": {
+      "type": "string",
+      "default": ""
+    },
+    "headingScale": {
+      "type": "string",
+      "default": ""
+    },
+    "bodyScale": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "hayden-hero-primary-editor",
+  "style": "hayden-hero-primary-style"
+}

@@ -1,0 +1,75 @@
+/* Outer hero card */
+.hayden-hero-primary {
+    position: relative;
+    padding: 2.5rem 2.75rem;
+    margin-inline: auto;
+    margin-block: var(--section-space-mobile);
+    border-radius: 2.5rem;
+    background: var(--card-bg);
+    color: var(--card-text, var(--color-body));
+}
+
+/* Desktop spacing */
+@media (min-width: 768px) {
+    .hayden-hero-primary {
+        margin-block: var(--section-space-desktop);
+    }
+}
+
+/* Inner layout wrapper */
+.hayden-hero-inner {
+    max-width: 48rem;
+}
+
+/* Eyebrow / pre-heading */
+.hayden-hero-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    color: inherit;
+}
+
+/* Main heading – font-size comes from .hayden-type-heading */
+.hayden-hero-heading {
+    line-height: 1.1;
+    margin: 0 0 1.5rem;
+    color: var(--card-heading, #f97316);
+}
+
+/* Body text – font-size comes from .hayden-type-body */
+.hayden-hero-text {
+    line-height: 1.6;
+    margin: 0 0 2.5rem;
+    color: inherit;
+}
+
+/* CTA area */
+.hayden-hero-actions {
+    display: flex;
+    align-items: center;
+}
+
+/* Hero button base styles */
+.hayden-hero-primary .hayden-hero-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.9rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+}
+
+/* Let Gutenberg’s colour classes still work */
+.hayden-hero-primary.has-background {
+    background-color: inherit;
+}
+
+.hayden-hero-primary.has-text-color {
+    color: inherit;
+}

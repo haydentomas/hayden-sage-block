@@ -1,0 +1,75 @@
+/* ==========================================================
+   Global typography utilities for Hayden blocks
+   - Attach .hayden-type to a wrapper
+   - Add .hayden-type--heading-{scale} / .hayden-type--body-{scale}
+   - Put .hayden-type-heading on the main heading
+   - Put .hayden-type-body on body text (and optional button text)
+========================================================== */
+
+/* ----------------------
+   HEADING FONT SIZES
+------------------------- */
+
+/* text-xl (1.25rem) */
+.hayden-type.hayden-type--heading-xl .hayden-type-heading {
+    font-size: 1.25rem;
+}
+
+/* text-2xl (1.5rem) */
+.hayden-type.hayden-type--heading-2xl .hayden-type-heading {
+    font-size: 1.5rem;
+}
+
+/* text-3xl (1.875rem) */
+.hayden-type.hayden-type--heading-3xl .hayden-type-heading {
+    font-size: 1.875rem;
+}
+
+/* text-4xl (2.25rem) */
+.hayden-type.hayden-type--heading-4xl .hayden-type-heading {
+    font-size: 2.25rem;
+}
+
+/* text-5xl (3rem) */
+.hayden-type.hayden-type--heading-5xl .hayden-type-heading {
+    font-size: 3rem;
+}
+
+/* text-6xl (3.75rem) */
+.hayden-type.hayden-type--heading-6xl .hayden-type-heading {
+    font-size: 3.75rem;
+}
+
+/* ----------------------
+   BODY FONT SIZES (incl. button if desired)
+------------------------- */
+
+/* text-sm (0.875rem) */
+.hayden-type.hayden-type--body-sm .hayden-type-body {
+    font-size: 0.875rem;
+}
+
+/* text-base (1rem) */
+.hayden-type.hayden-type--body-base .hayden-type-body {
+    font-size: 1rem;
+}
+
+/* text-lg (1.125rem) */
+.hayden-type.hayden-type--body-lg .hayden-type-body {
+    font-size: 1.125rem;
+}
+
+/* text-xl (1.25rem) */
+.hayden-type.hayden-type--body-xl .hayden-type-body {
+    font-size: 1.25rem;
+}
+
+/* text-2xl (1.5rem) */
+.hayden-type.hayden-type--body-2xl .hayden-type-body {
+    font-size: 1.5rem;
+}
+
+/* text-3xl (1.875rem) */
+.hayden-type.hayden-type--body-3xl .hayden-type-body {
+    font-size: 1.875rem;
+}
