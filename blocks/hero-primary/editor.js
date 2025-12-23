@@ -14,6 +14,7 @@
     registerBlockType('smart/hero-primary', {
         edit: function (props) {
             var attrs        = props.attributes;
+            var HB = (window.HaydenBlocks && window.HaydenBlocks.shared) ? window.HaydenBlocks.shared : null;
 
             // May be empty string = "Theme default"
             var headingScale = attrs.headingScale || '';
@@ -71,38 +72,26 @@
                     { group: 'styles' },
 
                     // Heading colour panel
-                    PanelColorSettings && createElement(PanelColorSettings, {
+                    HB && HB.colorPanelSingle(createElement, PanelColorSettings, __, {
                         title: __('Heading colour', 'hayden-blocks'),
-                        initialOpen: false,
-                        colorSettings: [
-                            {
-                                value: attrs.headingColor,
-                                onChange: function (color) {
-                                    props.setAttributes({ headingColor: color });
-                                },
-                                label: __('Heading text', 'hayden-blocks')
-                            }
-                        ]
+                        label: __('Heading text', 'hayden-blocks'),
+                        value: attrs.headingColor,
+                        attrKey: 'headingColor',
+                        setAttributes: props.setAttributes
                     }),
 
                     // Button colours panel
-                    PanelColorSettings && createElement(PanelColorSettings, {
+                    HB && HB.colorPanelButtons(createElement, PanelColorSettings, __, {
                         title: __('Button colours', 'hayden-blocks'),
-                        initialOpen: false,
-                        colorSettings: [
+                        setAttributes: props.setAttributes,
+                        buttons: [
                             {
-                                value: attrs.buttonBgColor,
-                                onChange: function (color) {
-                                    props.setAttributes({ buttonBgColor: color });
-                                },
-                                label: __('Button background', 'hayden-blocks')
-                            },
-                            {
-                                value: attrs.buttonTextColor,
-                                onChange: function (color) {
-                                    props.setAttributes({ buttonTextColor: color });
-                                },
-                                label: __('Button text', 'hayden-blocks')
+                                bgKey: 'buttonBgColor',
+                                textKey: 'buttonTextColor',
+                                bgLabel: __('Button background', 'hayden-blocks'),
+                                textLabel: __('Button text', 'hayden-blocks'),
+                                valueBg: attrs.buttonBgColor,
+                                valueText: attrs.buttonTextColor
                             }
                         ]
                     }),
@@ -224,6 +213,7 @@
 
         save: function (props) {
             var attrs        = props.attributes;
+            var HB = (window.HaydenBlocks && window.HaydenBlocks.shared) ? window.HaydenBlocks.shared : null;
             var headingScale = attrs.headingScale || '';
             var bodyScale    = attrs.bodyScale || '';
 

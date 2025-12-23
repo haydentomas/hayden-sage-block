@@ -1,15 +1,11 @@
 {
   "apiVersion": 2,
   "name": "smart/hero-primary",
-  "title": "Hero – Primary",
+  "title": "CTA - Primary",
   "category": "smart-blocks",
-  "icon": "slides",
-  "description": "A primary hero section with heading, text and call to action button.",
-  "keywords": [
-    "hero",
-    "banner",
-    "intro"
-  ],
+  "icon": "megaphone",
+  "description": "Call to action block with heading, text and button",
+ "keywords": ["cta", "call to action", "banner"],
   "supports": {
     "align": ["wide", "full"],
     "color": {

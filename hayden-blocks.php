@@ -12,41 +12,84 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register shared + block-specific scripts/styles.
+ * Register shared + auto-discovered block assets.
  */
 function hayden_blocks_register_assets() {
 
-    $dir_url = plugin_dir_url( __FILE__ );
+    $dir_url   = plugin_dir_url( __FILE__ );
+    $blocks_dir = __DIR__ . '/blocks';
 
     // Shared typography utilities (used by multiple blocks)
     wp_register_style(
         'hayden-blocks-typography',
-        $dir_url . 'blocks/assets/typography.css', // <-- NOTE: blocks/assets
+        $dir_url . 'blocks/assets/typography.css',
         array(),
         '0.1.0'
     );
 
-    // Hero Primary block stylesheet (depends on shared typography)
-    wp_register_style(
-        'hayden-hero-primary-style',
-        $dir_url . 'blocks/hero-primary/style.css',
-        array( 'hayden-blocks-typography' ),
-        '0.1.0'
-    );
-
-    // Hero Primary block editor script
+    // Shared editor helpers (colour panels, var mappers, etc.)
     wp_register_script(
-        'hayden-hero-primary-editor',
-        $dir_url . 'blocks/hero-primary/editor.js',
-        array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n' ),
+        'hayden-blocks-shared',
+        $dir_url . 'blocks/assets/shared.js',
+        array( 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n' ),
         '0.1.0',
         true
     );
+
+
+    // Auto-register assets for each block folder: blocks/<slug>/{editor.js,style.css}
+    if ( is_dir( $blocks_dir ) && class_exists( 'DirectoryIterator' ) ) {
+        foreach ( new DirectoryIterator( $blocks_dir ) as $item ) {
+
+            if ( $item->isDot() || ! $item->isDir() ) {
+                continue;
+            }
+
+            $slug = $item->getFilename();
+
+            // Skip shared assets folder
+            if ( $slug === 'assets' ) {
+                continue;
+            }
+
+            $editor_js = $item->getPathname() . '/editor.js';
+            $style_css = $item->getPathname() . '/style.css';
+
+            // Register style if present
+            if ( file_exists( $style_css ) ) {
+                wp_register_style(
+                    'hayden-' . $slug . '-style',
+                    $dir_url . 'blocks/' . $slug . '/style.css',
+                    array( 'hayden-blocks-typography' ),
+                    '0.1.0'
+                );
+            }
+
+            // Register editor script if present
+            if ( file_exists( $editor_js ) ) {
+                wp_register_script(
+                    'hayden-' . $slug . '-editor',
+                    $dir_url . 'blocks/' . $slug . '/editor.js',
+                    array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'hayden-blocks-shared' ),
+                    '0.1.0',
+                    true
+                );
+            }
+        }
+    }
 }
 add_action( 'init', 'hayden_blocks_register_assets' );
 
 /**
- * Register blocks using block.json files.
+ * Enqueue shared typography everywhere blocks appear (editor + front end).
+ */
+function hayden_blocks_enqueue_shared_assets() {
+    wp_enqueue_style( 'hayden-blocks-typography' );
+}
+add_action( 'enqueue_block_assets', 'hayden_blocks_enqueue_shared_assets' );
+
+/**
+ * Auto-register ALL blocks in /blocks/* that contain a block.json
  */
 function hayden_blocks_register_blocks() {
 
@@ -54,7 +97,32 @@ function hayden_blocks_register_blocks() {
         return;
     }
 
-    register_block_type( __DIR__ . '/blocks/hero-primary' );
+    $blocks_dir = __DIR__ . '/blocks';
+
+    if ( ! is_dir( $blocks_dir ) ) {
+        return;
+    }
+
+    if ( class_exists( 'DirectoryIterator' ) ) {
+        foreach ( new DirectoryIterator( $blocks_dir ) as $item ) {
+
+            if ( $item->isDot() || ! $item->isDir() ) {
+                continue;
+            }
+
+            $slug = $item->getFilename();
+
+            // Skip shared assets folder
+            if ( $slug === 'assets' ) {
+                continue;
+            }
+
+            $block_json = $item->getPathname() . '/block.json';
+            if ( file_exists( $block_json ) ) {
+                register_block_type( $item->getPathname() );
+            }
+        }
+    }
 }
 add_action( 'init', 'hayden_blocks_register_blocks', 20 );
 

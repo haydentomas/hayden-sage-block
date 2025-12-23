@@ -1,0 +1,49 @@
+{
+  "apiVersion": 2,
+  "name": "smart/hero",
+  "title": "Hero",
+  "category": "smart-blocks",
+  "icon": "cover-image",
+  "description": "Hero with heading, text, two buttons, optional image and optional client logos row.",
+  "keywords": ["hero", "banner", "intro"],
+  "supports": {
+    "align": ["wide", "full"],
+    "color": {
+      "background": true,
+      "text": true,
+      "link": false
+    },
+    "spacing": {
+      "padding": true,
+      "margin": ["top", "bottom"]
+    }
+  },
+  "attributes": {
+    "layout": { "type": "string", "default": "split" },
+    "mediaPosition": { "type": "string", "default": "right" },
+    "showClients": { "type": "boolean", "default": true },
+    "clientsLabel": { "type": "string", "default": "Our clients we’ve worked with" },
+
+    "heading": { "type": "string", "default": "We build solutions for boosting sales" },
+    "text": { "type": "string", "default": "Our smart algorithms will help to promote your business on social media without previous education" },
+
+    "button1Label": { "type": "string", "default": "Get Access" },
+    "button1Url": { "type": "string", "default": "" },
+    "button2Label": { "type": "string", "default": "Learn more" },
+    "button2Url": { "type": "string", "default": "" },
+
+    "mediaId": { "type": "number", "default": 0 },
+    "mediaUrl": { "type": "string", "default": "" },
+    "mediaAlt": { "type": "string", "default": "" },
+    "headingColor": { "type": "string", "default": "" },
+
+"button1BgColor": { "type": "string", "default": "" },
+"button1TextColor": { "type": "string", "default": "" },
+
+"button2BgColor": { "type": "string", "default": "" },
+"button2TextColor": { "type": "string", "default": "" }
+
+  },
+  "editorScript": "hayden-hero-editor",
+  "style": "hayden-hero-style"
+}
