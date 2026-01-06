@@ -47,8 +47,8 @@ function hayden_blocks_register_assets() {
 
             $slug = $item->getFilename();
 
-            // Skip shared assets folder
-            if ( $slug === 'assets' ) {
+            // Skip non-block folders
+            if ( $slug === 'assets' || $slug === 'scaffolds' ) {
                 continue;
             }
 
@@ -78,7 +78,7 @@ function hayden_blocks_register_assets() {
         }
     }
 }
-add_action( 'init', 'hayden_blocks_register_assets' );
+add_action( 'init', 'hayden_blocks_register_assets', 5 );
 
 /**
  * Enqueue shared typography everywhere blocks appear (editor + front end).
@@ -112,13 +112,14 @@ function hayden_blocks_register_blocks() {
 
             $slug = $item->getFilename();
 
-            // Skip shared assets folder
-            if ( $slug === 'assets' ) {
+            // Skip non-block folders
+            if ( $slug === 'assets' || $slug === 'scaffolds' ) {
                 continue;
             }
 
             $block_json = $item->getPathname() . '/block.json';
             if ( file_exists( $block_json ) ) {
+                // WP supports passing a block folder path here; it will read block.json metadata.
                 register_block_type( $item->getPathname() );
             }
         }

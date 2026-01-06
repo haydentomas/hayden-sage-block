@@ -92,3 +92,34 @@ A boilerplate template will be added soon for faster development.
 ## 📃 License
 
 Private — internal use only unless explicitly published.
+
+---
+
+## Block generator (automation)
+
+This plugin ships with a tiny block generator to create a new block folder with `block.json`, `editor.js`, and `style.css`.
+
+### Requirements
+- Node.js (LTS)
+- npm
+
+### Usage
+From the plugin folder:
+
+```bash
+npm install
+npm run make:block section
+# or (title will be derived automatically)
+npm run make:block "feature grid"
+```
+
+This creates:
+
+```
+blocks/<slug>/
+  block.json
+  editor.js
+  style.css
+```
+
+The plugin auto-registers scripts/styles and auto-registers any block folder that contains a `block.json`.

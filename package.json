@@ -1,0 +1,8 @@
+{
+  "name": "hayden-blocks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "make:block": "node scripts/create-block.js"
+  }
+}
