@@ -1,78 +1,136 @@
 (function (blocks, element, blockEditor, components, i18n) {
-    var registerBlockType  = blocks.registerBlockType;
-    var createElement      = element.createElement;
-    var __                 = i18n.__;
+    var registerBlockType = blocks.registerBlockType;
+    var el                = element.createElement;
+    var __                = i18n.__;
 
-    var useBlockProps      = blockEditor.useBlockProps;
-    var RichText           = blockEditor.RichText;
-    var InspectorControls  = blockEditor.InspectorControls;
+    var useBlockProps     = blockEditor.useBlockProps;
+    var RichText          = blockEditor.RichText;
+    var InspectorControls = blockEditor.InspectorControls;
+
     var PanelColorSettings = blockEditor.PanelColorSettings || components.PanelColorSettings;
     var PanelBody          = components.PanelBody;
     var TextControl        = components.TextControl;
     var SelectControl      = components.SelectControl;
+    var RadioControl       = components.RadioControl;
 
     registerBlockType('smart/hero-primary', {
         edit: function (props) {
-            var attrs        = props.attributes;
-            var HB = (window.HaydenBlocks && window.HaydenBlocks.shared) ? window.HaydenBlocks.shared : null;
+            var attrs = props.attributes;
+            var HB    = window.HaydenBlocks && window.HaydenBlocks.shared
+                ? window.HaydenBlocks.shared
+                : null;
 
-            // May be empty string = "Theme default"
             var headingScale = attrs.headingScale || '';
             var bodyScale    = attrs.bodyScale || '';
+            var innerSpacing = attrs.innerSpacing || 'global';
 
-            // Build class list conditionally – note .hayden-type
+            /* -------------------------------------------------
+               Wrapper classes + data attributes
+            ------------------------------------------------- */
             var classNames = ['hayden-hero-primary', 'hayden-type'];
+
             if (headingScale) {
                 classNames.push('hayden-type--heading-' + headingScale);
             }
+
             if (bodyScale) {
                 classNames.push('hayden-type--body-' + bodyScale);
             }
 
             var blockProps = useBlockProps({
-                className: classNames.join(' ')
+                className: classNames.join(' '),
+                ...(innerSpacing !== 'global' ? { 'data-spacing': innerSpacing } : {})
             });
 
-            // --- Button style (only apply if user has set a colour) ---
-            var buttonStyle    = {};
-            var hasButtonStyle = false;
+            /* -------------------------------------------------
+               Button inline styles (optional)
+            ------------------------------------------------- */
+            var buttonStyle = {};
 
             if (attrs.buttonBgColor) {
                 buttonStyle.backgroundColor = attrs.buttonBgColor;
-                hasButtonStyle = true;
             }
 
             if (attrs.buttonTextColor) {
                 buttonStyle.color = attrs.buttonTextColor;
-                hasButtonStyle = true;
             }
 
             var buttonRichTextProps = {
                 tagName: 'a',
                 className: 'hayden-hero-button hayden-type-body',
                 value: attrs.buttonLabel,
+                href: attrs.buttonUrl,
+                allowedFormats: [],
+                placeholder: __('Button label', 'hayden-blocks'),
                 onChange: function (value) {
                     props.setAttributes({ buttonLabel: value });
                 },
-                placeholder: __('Button label', 'hayden-blocks'),
-                href: attrs.buttonUrl,
-                allowedFormats: []
+                ...(Object.keys(buttonStyle).length ? { style: buttonStyle } : {})
             };
 
-            if (hasButtonStyle) {
-                buttonRichTextProps.style = buttonStyle;
-            }
-
             return [
-                // -------------------------------
-                // STYLES TAB: colours + typography
-                // -------------------------------
-                createElement(
+                /* =================================================
+                   STYLES TAB (Layout → Typography → Colours)
+                ================================================= */
+                el(
                     InspectorControls,
                     { group: 'styles' },
 
-                    // Heading colour panel
-                    HB && HB.colorPanelSingle(createElement, PanelColorSettings, __, {
+                    /* ---------- Layout (shared) ---------- */
+                    HB && HB.spacingPanel(
+                        el,
+                        PanelBody,
+                        RadioControl,
+                        __,
+                        {
+                            value: innerSpacing,
+                            attrKey: 'innerSpacing',
+                            setAttributes: props.setAttributes
+                        }
+                    ),
+
+                    /* ---------- Typography ---------- */
+                    el(
+                        PanelBody,
+                        { title: __('Typography', 'hayden-blocks'), initialOpen: false },
+
+                        el(SelectControl, {
+                            label: __('Heading font size', 'hayden-blocks'),
+                            value: headingScale,
+                            options: [
+                                { label: __('Theme default', 'hayden-blocks'), value: '' },
+                                { label: 'XL', value: 'xl' },
+                                { label: '2XL', value: '2xl' },
+                                { label: '3XL', value: '3xl' },
+                                { label: '4XL', value: '4xl' },
+                                { label: '5XL', value: '5xl' },
+                                { label: '6XL', value: '6xl' }
+                            ],
+                            onChange: function (value) {
+                                props.setAttributes({ headingScale: value });
+                            }
+                        }),
+
+                        el(SelectControl, {
+                            label: __('Body font size', 'hayden-blocks'),
+                            value: bodyScale,
+                            options: [
+                                { label: __('Theme default', 'hayden-blocks'), value: '' },
+                                { label: 'Small', value: 'sm' },
+                                { label: 'Base', value: 'base' },
+                                { label: 'Large', value: 'lg' },
+                                { label: 'XL', value: 'xl' },
+                                { label: '2XL', value: '2xl' },
+                                { label: '3XL', value: '3xl' }
+                            ],
+                            onChange: function (value) {
+                                props.setAttributes({ bodyScale: value });
+                            }
+                        })
+                    ),
+
+                    /* ---------- Colours ---------- */
+                    HB && HB.colorPanelSingle(el, PanelColorSettings, __, {
                         title: __('Heading colour', 'hayden-blocks'),
                         label: __('Heading text', 'hayden-blocks'),
                         value: attrs.headingColor,
@@ -80,8 +138,7 @@
                         setAttributes: props.setAttributes
                     }),
 
-                    // Button colours panel
-                    HB && HB.colorPanelButtons(createElement, PanelColorSettings, __, {
+                    HB && HB.colorPanelButtons(el, PanelColorSettings, __, {
                         title: __('Button colours', 'hayden-blocks'),
                         setAttributes: props.setAttributes,
                         buttons: [
@@ -94,63 +151,19 @@
                                 valueText: attrs.buttonTextColor
                             }
                         ]
-                    }),
-
-                    // Typography: Tailwind-based heading + body font sizes
-                    createElement(
-                        PanelBody,
-                        { title: __('Typography', 'hayden-blocks'), initialOpen: false },
-
-                        // Heading font size (Tailwind scale)
-                        createElement(SelectControl, {
-                            label: __('Heading font size', 'hayden-blocks'),
-                            help: __('Based on Tailwind font-size scale.', 'hayden-blocks'),
-                            value: headingScale,
-                            options: [
-                                { label: __('Theme default', 'hayden-blocks'), value: '' },
-                                { label: 'XL (Tailwind text-xl)',   value: 'xl' },
-                                { label: '2XL (Tailwind text-2xl)', value: '2xl' },
-                                { label: '3XL (Tailwind text-3xl)', value: '3xl' },
-                                { label: '4XL (Tailwind text-4xl)', value: '4xl' },
-                                { label: '5XL (Tailwind text-5xl)', value: '5xl' },
-                                { label: '6XL (Tailwind text-6xl)', value: '6xl' }
-                            ],
-                            onChange: function (value) {
-                                props.setAttributes({ headingScale: value });
-                            }
-                        }),
-
-                        // Body font size (Tailwind scale)
-                        createElement(SelectControl, {
-                            label: __('Body font size', 'hayden-blocks'),
-                            help: __('Based on Tailwind font-size scale.', 'hayden-blocks'),
-                            value: bodyScale,
-                            options: [
-                                { label: __('Theme default', 'hayden-blocks'), value: '' },
-                                { label: 'Small (Tailwind text-sm)',  value: 'sm' },
-                                { label: 'Base (Tailwind text-base)', value: 'base' },
-                                { label: 'Large (Tailwind text-lg)',  value: 'lg' },
-                                { label: 'XL (Tailwind text-xl)',     value: 'xl' },
-                                { label: '2XL (Tailwind text-2xl)',   value: '2xl' },
-                                { label: '3XL (Tailwind text-3xl)',   value: '3xl' }
-                            ],
-                            onChange: function (value) {
-                                props.setAttributes({ bodyScale: value });
-                            }
-                        })
-                    )
+                    })
                 ),
 
-                // -------------------------------
-                // SETTINGS TAB: functional stuff
-                // -------------------------------
-                createElement(
+                /* =================================================
+                   SETTINGS TAB
+                ================================================= */
+                el(
                     InspectorControls,
                     { group: 'settings' },
-                    createElement(
+                    el(
                         PanelBody,
                         { title: __('Hero settings', 'hayden-blocks'), initialOpen: true },
-                        createElement(TextControl, {
+                        el(TextControl, {
                             label: __('Button URL', 'hayden-blocks'),
                             value: attrs.buttonUrl,
                             onChange: function (value) {
@@ -160,51 +173,51 @@
                     )
                 ),
 
-                // -------------------------------
-                // Block content (editor canvas)
-                // -------------------------------
-                createElement(
+                /* =================================================
+                   BLOCK CONTENT (EDITOR)
+                ================================================= */
+                el(
                     'section',
                     blockProps,
-                    createElement(
+                    el(
                         'div',
                         { className: 'hayden-hero-inner' },
 
-                        createElement(RichText, {
+                        el(RichText, {
                             tagName: 'p',
                             className: 'hayden-hero-eyebrow',
                             value: attrs.eyebrow,
+                            placeholder: __('Pre-heading', 'hayden-blocks'),
                             onChange: function (value) {
                                 props.setAttributes({ eyebrow: value });
-                            },
-                            placeholder: __('Pre-heading', 'hayden-blocks')
+                            }
                         }),
 
-                        createElement(RichText, {
+                        el(RichText, {
                             tagName: 'h1',
                             className: 'hayden-hero-heading hayden-type-heading',
                             value: attrs.heading,
+                            placeholder: __('Hero heading…', 'hayden-blocks/or'),
+                            style: attrs.headingColor ? { color: attrs.headingColor } : null,
                             onChange: function (value) {
                                 props.setAttributes({ heading: value });
-                            },
-                            placeholder: __('Hero heading…', 'hayden-blocks'),
-                            style: attrs.headingColor ? { color: attrs.headingColor } : null
+                            }
                         }),
 
-                        createElement(RichText, {
+                        el(RichText, {
                             tagName: 'p',
                             className: 'hayden-hero-text hayden-type-body',
                             value: attrs.text,
+                            placeholder: __('Short description…', 'hayden-blocks'),
                             onChange: function (value) {
                                 props.setAttributes({ text: value });
-                            },
-                            placeholder: __('Short description…', 'hayden-blocks')
+                            }
                         }),
 
-                        createElement(
+                        el(
                             'div',
                             { className: 'hayden-hero-actions' },
-                            createElement(RichText, buttonRichTextProps)
+                            el(RichText, buttonRichTextProps)
                         )
                     )
                 )
@@ -212,58 +225,49 @@
         },
 
         save: function (props) {
-            var attrs        = props.attributes;
-            var HB = (window.HaydenBlocks && window.HaydenBlocks.shared) ? window.HaydenBlocks.shared : null;
+            var attrs = props.attributes;
+
             var headingScale = attrs.headingScale || '';
             var bodyScale    = attrs.bodyScale || '';
+            var innerSpacing = attrs.innerSpacing || 'global';
 
             var classNames = ['hayden-hero-primary', 'hayden-type'];
+
             if (headingScale) {
                 classNames.push('hayden-type--heading-' + headingScale);
             }
+
             if (bodyScale) {
                 classNames.push('hayden-type--body-' + bodyScale);
             }
 
             var blockProps = blockEditor.useBlockProps.save({
-                className: classNames.join(' ')
+                className: classNames.join(' '),
+                ...(innerSpacing !== 'global' ? { 'data-spacing': innerSpacing } : {})
             });
 
-            // --- Button colours on the front end ---
-            var buttonStyle    = {};
-            var hasButtonStyle = false;
+            var buttonStyle = {};
 
             if (attrs.buttonBgColor) {
                 buttonStyle.backgroundColor = attrs.buttonBgColor;
-                hasButtonStyle = true;
             }
 
             if (attrs.buttonTextColor) {
                 buttonStyle.color = attrs.buttonTextColor;
-                hasButtonStyle = true;
             }
 
-            var buttonProps = {
-                className: 'hayden-hero-button hayden-type-body',
-                href: attrs.buttonUrl || '#'
-            };
-
-            if (hasButtonStyle) {
-                buttonProps.style = buttonStyle;
-            }
-
-            return createElement(
+            return el(
                 'section',
                 blockProps,
-                createElement(
+                el(
                     'div',
                     { className: 'hayden-hero-inner' },
 
                     attrs.eyebrow &&
-                        createElement('p', { className: 'hayden-hero-eyebrow' }, attrs.eyebrow),
+                        el('p', { className: 'hayden-hero-eyebrow' }, attrs.eyebrow),
 
                     attrs.heading &&
-                        createElement(
+                        el(
                             'h1',
                             {
                                 className: 'hayden-hero-heading hayden-type-heading',
@@ -273,17 +277,25 @@
                         ),
 
                     attrs.text &&
-                        createElement(
+                        el(
                             'p',
                             { className: 'hayden-hero-text hayden-type-body' },
                             attrs.text
                         ),
 
                     attrs.buttonLabel &&
-                        createElement(
+                        el(
                             'div',
                             { className: 'hayden-hero-actions' },
-                            createElement('a', buttonProps, attrs.buttonLabel)
+                            el(
+                                'a',
+                                {
+                                    className: 'hayden-hero-button hayden-type-body',
+                                    href: attrs.buttonUrl || '#',
+                                    ...(Object.keys(buttonStyle).length ? { style: buttonStyle } : {})
+                                },
+                                attrs.buttonLabel
+                            )
                         )
                 )
             );

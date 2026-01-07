@@ -1,0 +1,19 @@
+{
+  "apiVersion": 2,
+  "name": "smart/section",
+  "title": "HB – Section",
+  "category": "smart-blocks",
+  "icon": "layout",
+  "description": "Section block.",
+  "keywords": ["section", "layout", "hayden"],
+  "supports": {
+    "align": ["wide", "full"],
+    "html": false
+  },
+  "attributes": {
+    "heading": { "type": "string", "default": "Section" },
+    "text": { "type": "string", "default": "" }
+  },
+  "editorScript": "hayden-section-editor",
+  "style": "hayden-section-style"
+}

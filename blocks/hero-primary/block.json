@@ -5,7 +5,8 @@
   "category": "smart-blocks",
   "icon": "megaphone",
   "description": "Call to action block with heading, text and button",
- "keywords": ["cta", "call to action", "banner"],
+  "keywords": ["cta", "call to action", "banner"],
+
   "supports": {
     "align": ["wide", "full"],
     "color": {
@@ -14,10 +15,10 @@
       "link": false
     },
     "spacing": {
-      "padding": true,
       "margin": ["top", "bottom"]
     }
   },
+
   "attributes": {
     "eyebrow": {
       "type": "string",
@@ -31,10 +32,12 @@
       "type": "string",
       "default": "Custom builds, ongoing care plans and performance optimisation for businesses that take their website seriously."
     },
+
     "headingColor": {
       "type": "string",
       "default": ""
     },
+
     "buttonLabel": {
       "type": "string",
       "default": "Start a project"
@@ -51,6 +54,7 @@
       "type": "string",
       "default": ""
     },
+
     "headingScale": {
       "type": "string",
       "default": ""
@@ -58,8 +62,14 @@
     "bodyScale": {
       "type": "string",
       "default": ""
+    },
+
+    "innerSpacing": {
+      "type": "string",
+      "default": "global"
     }
   },
+
   "editorScript": "hayden-hero-primary-editor",
   "style": "hayden-hero-primary-style"
 }

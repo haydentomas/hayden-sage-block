@@ -1,0 +1,78 @@
+/* =========================
+   Section base
+========================= */
+
+.hb-section {
+  width: 100%;
+  padding: var(--block-padding, var(--space-md));
+
+  --hb-section-heading-color: inherit;
+  --hb-section-text-color: inherit;
+}
+
+/* =========================
+   Spacing
+========================= */
+
+.hb-section[data-spacing="compact"] {
+  --block-padding: var(--space-sm);
+}
+
+.hb-section[data-spacing="default"] {
+  --block-padding: var(--space-md);
+}
+
+.hb-section[data-spacing="spacious"] {
+  --block-padding: var(--space-lg);
+}
+
+/* =========================
+   TEXT COLOUR
+   (safe, non-leaking)
+========================= */
+
+.hb-section
+  :where(
+    p,
+    li,
+    blockquote,
+    figcaption,
+    .wp-block-paragraph p,
+    .wp-block-list
+  ) {
+  color: var(--hb-section-text-color);
+}
+
+/* =========================
+   HEADING COLOUR
+   (THIS IS THE FIX)
+========================= */
+
+/* Frontend + editor, all wrappers */
+.hb-section
+  :where(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .wp-block-heading h1,
+    .wp-block-heading h2,
+    .wp-block-heading h3,
+    .wp-block-heading h4,
+    .wp-block-heading h5,
+    .wp-block-heading h6
+  ) {
+  color: var(--hb-section-heading-color);
+}
+
+/* =========================
+   Inner container
+========================= */
+
+.hb-section__inner {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
